@@ -1,0 +1,79 @@
+openapi: 3.0.3
+info:
+  title: Observability Tool API
+  version: 0.1.0
+  description: REST API for the observability control plane and telemetry queries.
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: Operations
+    description: Process readiness endpoints.
+paths:
+  /readyz:
+    get:
+      operationId: getReadiness
+      summary: Check traffic readiness
+      tags:
+        - Operations
+      responses:
+        "200":
+          description: The API is ready to accept traffic.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReadinessResponse"
+        default:
+          description: The request could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  schemas:
+    Meta:
+      type: object
+      required:
+        - requestId
+      properties:
+        requestId:
+          type: string
+          description: Correlates the response with server-side logs.
+    ReadinessResponse:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: object
+          required:
+            - status
+          properties:
+            status:
+              type: string
+              enum:
+                - ready
+        meta:
+          $ref: "#/components/schemas/Meta"
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          example: NOT_FOUND
+        message:
+          type: string
+          example: Resource not found
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - meta
+      properties:
+        error:
+          $ref: "#/components/schemas/Error"
+        meta:
+          $ref: "#/components/schemas/Meta"
