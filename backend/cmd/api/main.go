@@ -28,7 +28,8 @@ func main() {
 	)
 	defer stop()
 
-	if err := server.Run(ctx, appConfig, logger, httpapi.NewHandler(logger)); err != nil {
+	handler := httpapi.NewHandler(logger, appConfig.MaxRequestBytes)
+	if err := server.Run(ctx, appConfig, logger, handler); err != nil {
 		logger.Error("api server stopped unexpectedly", "error", err)
 		os.Exit(1)
 	}

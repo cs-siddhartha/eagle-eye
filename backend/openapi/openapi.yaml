@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Observability Tool API
-  version: 0.1.0
+  version: 0.2.0
   description: REST API for the observability control plane and telemetry queries.
 servers:
   - url: http://localhost:8080
@@ -22,6 +22,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ReadinessResponse"
+        "405":
+          description: The endpoint does not support the requested method.
+          headers:
+            Allow:
+              description: Methods supported by this resource.
+              schema:
+                type: string
+                example: GET
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         default:
           description: The request could not be completed.
           content:
@@ -64,6 +76,12 @@ components:
         code:
           type: string
           example: NOT_FOUND
+          enum:
+            - INTERNAL_ERROR
+            - METHOD_NOT_ALLOWED
+            - NOT_FOUND
+            - REQUEST_TOO_LARGE
+            - UNSUPPORTED_MEDIA_TYPE
         message:
           type: string
           example: Resource not found

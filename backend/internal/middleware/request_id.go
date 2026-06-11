@@ -11,7 +11,6 @@ const requestIDHeader = "X-Request-ID"
 
 type requestIDContextKey struct{}
 
-// RequestID assigns or preserves a request identifier so clients can
 // correlate each response with future structured server logs.
 func RequestID(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
